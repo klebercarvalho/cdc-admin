@@ -29,6 +29,7 @@ class App extends Component {
 
   enviaForm(evento){
     evento.preventDefault();
+    console.log(this);
     $.ajax({
        url:'http://localhost:8080/api/autores',
        contentType:'application/json',
@@ -36,8 +37,10 @@ class App extends Component {
        type:'post',
        data: JSON.stringify({nome:this.state.nome,email:this.state.email,senha:this.state.senha}),
        success: function(resposta){
+         console.log(resposta);
          console.log("enviado com sucesso");
-      },
+         this.setState({lista:resposta});        
+       }.bind(this),
        error: function(resposta){
          console.log("erro");
        }      
