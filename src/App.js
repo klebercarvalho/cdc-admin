@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
 
   constructor() {
     super();
-    this.state = {lista : [{nome:'alberto', email:'alberto@caelum.com.br',senha:'123456'}]};
+    this.state = {lista : []};
+  }
+
+  componentDidMount(){
+    console.log("DidMount");
+    $.ajax({
+        url:"http://localhost:8080/api/autores",
+        dataType: 'json',
+        success:function(resposta){
+          console.log("chegou a resposta");
+          this.setState = ({lista:resposta});
+        }
+      }
+    );
   }
 
   render() {
+    console.log("render");
     return (
+      
 <div id="layout">
     
     <a href="#menu" id="menuLink" className="menu-link">
@@ -70,7 +86,7 @@ class App extends Component {
                     {
                       this.state.lista.map(function(autor){
                         return (
-                          <tr>
+                          <tr key={autor.id}>
                             <td>{autor.nome}</td>
                             <td>{autor.email}</td>
                           </tr>
