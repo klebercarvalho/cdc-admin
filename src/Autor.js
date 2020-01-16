@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import InputCustomizado from './componentes/InputCustomizado';
 import PubSub from 'pubsub-js';
+import TratadorErros from './TratadorErros';
 
 /*
  *
@@ -19,7 +20,6 @@ class FormularioAutor extends Component {
 
     enviaForm(evento) {
         evento.preventDefault();
-        console.log(this);
         $.ajax({
             url: 'http://localhost:8080/api/autores',
             contentType: 'application/json',
@@ -28,9 +28,16 @@ class FormularioAutor extends Component {
             data: JSON.stringify({ nome: this.state.nome, email: this.state.email, senha: this.state.senha }),
             success: function (NovaListagem) {
                 PubSub.publish('atualiza-lista-autores',NovaListagem);
+                this.setState({nome:'', email:'', senha:''});
+            }.bind(this),
+            error: function (resposta) {
+                if(resposta.status === 400) {
+                    new TratadorErros().publicaErros(resposta.responseJSON);
+
+                }
             },
-            erro: function (resposta) {
-                console.log("erro");
+            beforeSend: function() {
+                PubSub.publish('limpa-erros', {})
             }
         });
     }
