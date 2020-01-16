@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import InputCustomizado from './componentes/InputCustomizado';
 
+/*
+ *
+ */
 class FormularioAutor extends Component {
 
     constructor() {
